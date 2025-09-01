@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from database import create_tables
 from contextlib import asynccontextmanager
+from routers import users
 import uvicorn
 
 
@@ -17,7 +18,7 @@ app = FastAPI(
     lifespan=lifespan_events
 )
 
-# app.include_router()
+app.include_router(users.router)
 
 @app.get("/")
 async def root():
