@@ -84,3 +84,22 @@ async def balance_check(db: AsyncSession, user_id: int):
     result = await db.execute(select(User).where(User.id == user_id))
     db_user = result.scalar_one_or_none()
     return db_user
+
+# Transfer
+
+async def transfer(db: AsyncSession, user_id: int, recipient_user_id: int, amount: float):
+    result1 = await db.execute(select(User).select(User.id == user_id))
+    result2 = await db.execute(select(User).select(User.id == recipient_user_id))
+    db_user = result1.scalar_one_or_none()
+    recipient_user = result2.scalar_one_or_none()
+    if db_user:
+        if db_user.balance < amount:
+            raise
+        else:
+            setattr(db_user, "balance", db_user.balance-amount)
+            setattr(recipient_user, "balance", db_user.balance+amount)
+            await db.commit()
+            await db.refresh(db_user)
+            await db.refresh(recipient_user)
+    return db_user       
+            

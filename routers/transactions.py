@@ -7,21 +7,6 @@ import services
 
 router = APIRouter(prefix="/transactions", tags=["transactions"])
 
-# POST /transactions
-@router.post("/", response_model=TransactionResponse, status_code=status.HTTP_201_CREATED)
-async def create_transaction(new_trans: TransactionCreate, db: AsyncSession = Depends(get_db)):
-    return await services.create_transaction(db=db, new_trans=new_trans)
-
-# GET /transactions/{user_id}?page=1&limit=10
-@router.get("/{user_id}", response_model=TransactionResponse, status_code=status.HTTP_200_OK)
-async def get_user_transaction(user_id: int, skip: int = 0, limit: int = 10, db: AsyncSession = Depends(get_db)):
-    return await services.get_user_transaction(db=db, user_id=user_id, skip=skip, limit=limit)
-
-# GET /transactions/detail/{transaction_id}
-@router.get("/detail/{transaction_id}", response_model=TransactionResponse, status_code=status.HTTP_200_OK)
-async def get_transaction_details(tran_id: int, db: AsyncSession = Depends(get_db)):
-    return await services.get_transaction_details(db=db, tran_id=tran_id)
-
 
 # Add money
 @router.post("/add-money", response_model=SelfTransactionResponse, status_code=status.HTTP_200_OK)
@@ -44,4 +29,25 @@ async def balance_check(user_id:int, db: AsyncSession = Depends(get_db)):
 
 
 # transfer
-# @router.post("")
+@router.post("/transfer", status_code=status.HTTP_200_OK)
+async def transfer(user_id:int, recipient_user_id: int, amount: float, db: AsyncSession = Depends(get_db)):
+    res = await services.transfer(db=db, user_id=user_id, recipient_user_id=recipient_user_id, amount=amount)
+    if not res:
+            raise HTTPException(status_code=404, detail="User not found")
+    return res
+
+# POST /transactions
+@router.post("/", response_model=TransactionResponse, status_code=status.HTTP_201_CREATED)
+async def create_transaction(new_trans: TransactionCreate, db: AsyncSession = Depends(get_db)):
+    return await services.create_transaction(db=db, new_trans=new_trans)
+
+# GET /transactions/{user_id}?page=1&limit=10
+@router.get("/{user_id}", response_model=TransactionResponse, status_code=status.HTTP_200_OK)
+async def get_user_transaction(user_id: int, skip: int = 0, limit: int = 10, db: AsyncSession = Depends(get_db)):
+    return await services.get_user_transaction(db=db, user_id=user_id, skip=skip, limit=limit)
+
+# GET /transactions/detail/{transaction_id}
+@router.get("/detail/{transaction_id}", response_model=TransactionResponse, status_code=status.HTTP_200_OK)
+async def get_transaction_details(tran_id: int, db: AsyncSession = Depends(get_db)):
+    return await services.get_transaction_details(db=db, tran_id=tran_id)
+

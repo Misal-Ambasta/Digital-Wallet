@@ -8,7 +8,7 @@ class UserBase(BaseModel):
     email: str
     password: str
     phone_number: str
-    balance: float = 0.0
+    # balance: float = 0.0
 
 
 class UserCreate(UserBase):

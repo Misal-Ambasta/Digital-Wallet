@@ -1,11 +1,13 @@
 # Digital-Wallet
 
+- Clone the repo
 
-To run app
+## To run app
 ```python
 python main.py
 ```
 
+### DB Structure
 ```python
 -- Users Table
 CREATE TABLE users (
