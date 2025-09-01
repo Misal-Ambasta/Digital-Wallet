@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from database import create_tables
 from contextlib import asynccontextmanager
-from routers import users
+from routers import users, transactions
 import uvicorn
 
 
@@ -19,10 +19,11 @@ app = FastAPI(
 )
 
 app.include_router(users.router)
+app.include_router(transactions.router)
 
 @app.get("/")
 async def root():
     return { "message": "Working" }
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=8100, reload=True)

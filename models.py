@@ -10,7 +10,7 @@ class User(Base):
     __tablename__ = "users"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
-    username: Mapped[str] = mapped_column(String(50), unique=True, nullable=False, index=True)
+    username: Mapped[str] = mapped_column(String(50), nullable=False, index=True)
     email: Mapped[str] = mapped_column(String(100), nullable=False, index=True)
     password: Mapped[str] = mapped_column(String(255), nullable=False)
     phone_number: Mapped[str] = mapped_column(String(15))
@@ -18,7 +18,7 @@ class User(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), server_onupdate=func.now())
 
-    Transactions = relationship("Transaction", back_populates="user")
+    transactions = relationship("Transaction", back_populates="user")
 
 class Transaction(Base):
     __tablename__ = "transactions"
@@ -28,5 +28,7 @@ class Transaction(Base):
     amount: Mapped[float] = mapped_column(Float, nullable=False)
     description: Mapped[str] = mapped_column(Text)
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"))
-    recipient_user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"))
+    recipient_user_id: Mapped[int] = mapped_column(Integer)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+    user = relationship("User", back_populates="transactions")

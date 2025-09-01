@@ -15,9 +15,7 @@ class UserCreate(UserBase):
     pass
 
 class UserUpdate(BaseModel):
-    username: Optional[str]
-    email: Optional[str]
-    password: Optional[str]
+    # username: Optional[str]
     phone_number: Optional[str]
 
 
@@ -30,13 +28,13 @@ class UserResponse(BaseModel):
     created_at: datetime
     model_config=ConfigDict(from_attributes=True)
 
-class TrasactionBase(BaseModel):
+class TransactionBase(BaseModel):
     user_id: int
     transaction_type: str
     amount: float
     description: str
 
-class TransactionCreate(TrasactionBase):
+class TransactionCreate(TransactionBase):
     pass
 
 class TransactionResponse(BaseModel):
@@ -44,3 +42,11 @@ class TransactionResponse(BaseModel):
     created_at: datetime
     class Config:
         from_attributes = True
+
+
+class SelfTransactionResponse(BaseModel):
+    id: int
+    username: str
+    email: str
+    balance: int
+    updated_at: datetime
