@@ -29,11 +29,13 @@ async def balance_check(user_id:int, db: AsyncSession = Depends(get_db)):
 
 
 # transfer
-@router.post("/transfer", status_code=status.HTTP_200_OK)
+from schemas import TransferResponse
+
+@router.post("/transfer", response_model=TransferResponse, status_code=status.HTTP_200_OK)
 async def transfer(user_id:int, recipient_user_id: int, amount: float, db: AsyncSession = Depends(get_db)):
     res = await services.transfer(db=db, user_id=user_id, recipient_user_id=recipient_user_id, amount=amount)
     if not res:
-            raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(status_code=404, detail="User not found")
     return res
 
 # POST /transactions

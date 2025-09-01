@@ -1,4 +1,8 @@
 from pydantic import BaseModel, ConfigDict
+
+class TransferResponse(BaseModel):
+    sender_transaction_id: int
+    recipient_transaction_id: int
 from typing import List, Optional
 from datetime import datetime
 
@@ -15,7 +19,7 @@ class UserCreate(UserBase):
     pass
 
 class UserUpdate(BaseModel):
-    # username: Optional[str]
+    username: Optional[str]
     phone_number: Optional[str]
 
 
